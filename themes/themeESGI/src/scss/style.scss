@@ -1,21 +1,29 @@
 /*
-Theme Name: ESGI
-Theme URI: https:/esgi.fr
+Theme Name: Esgi Thème
+Theme URI: https://esgi.fr
 Author: the ESGI team
-Author URI: https://esgi.org/
-Description: Thème graphique d'entrainement
+Author URI: https://wordpress.org/
+Description: Thème d'exercice de développement
+Requires at least: 5.3
+Tested up to: 6.0
+Requires PHP: 5.6
 Version: 1.0
-Requires at least: 5.0
-Tested up to: 5.4
-Requires PHP: 7.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: twentytwenty
-This theme, like WordPress, is licensed under the GPL.
-Use it to make something cool, have fun, and share what you've learned with others.
+Text Domain: ESGI
+
 */
 
-@import 'vendor/normalize.scss';
-@import 'vendor/bootstrap-grid.min.scss';
 
+@import 'vendor/bootstrap-grid';
+@import 'vendor/normalize';
+@import 'partials/fonts';
+@import 'partials/colors';
+@import 'partials/functions';
 @import 'partials/globals';
+
+@import 'components/header';
+@import 'components/footer';
+@import 'components/posts-list';
+@import 'components/identity-card';
+

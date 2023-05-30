@@ -8,7 +8,7 @@
 
 	<body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
-		<header>
+		<header id="site-header" class="col-md-6 offset-3">
 			<div class="container">
 				<?php if(has_nav_menu('main_menu')){
 					wp_nav_menu([

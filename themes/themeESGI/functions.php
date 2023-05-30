@@ -5,7 +5,8 @@
 add_action( 'after_setup_theme', 'esgi_setup_theme', 0 );
 function esgi_setup_theme(){
 	add_theme_support( 'custom-logo' );
-
+	add_theme_support( 'post-thumbnails' );
+	
 	register_nav_menus( [
 		'main_menu' => 'Menu principal',
 		'footer_menu' => 'Menu du footer',
