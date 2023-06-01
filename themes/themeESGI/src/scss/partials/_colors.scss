@@ -10,4 +10,8 @@ $light-grey: lightgrey;
 }
 
 
+.dark{
+	--bg-color: #{$black};
+	--text-color: #{$white};
+}
 

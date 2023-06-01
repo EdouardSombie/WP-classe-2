@@ -6,7 +6,7 @@ add_action( 'after_setup_theme', 'esgi_setup_theme', 0 );
 function esgi_setup_theme(){
 	add_theme_support( 'custom-logo' );
 	add_theme_support( 'post-thumbnails' );
-	
+	add_theme_support( 'widgets' );
 	register_nav_menus( [
 		'main_menu' => 'Menu principal',
 		'footer_menu' => 'Menu du footer',
@@ -17,6 +17,20 @@ function esgi_setup_theme(){
 add_action( 'wp_enqueue_scripts', 'esgi_enqueue_assets', 0 );
 function esgi_enqueue_assets(){
 	wp_enqueue_style( 'main', get_stylesheet_uri());
+	
+	wp_enqueue_script( 'main-jquery', get_template_directory_uri() . '/assets/js/vendor/jquery-3.7.0.min.js');
+	wp_enqueue_script( 'main', get_template_directory_uri() . '/assets/js/main.js');
+
+	// Injection d'une variable dans le js
+
+	$big = 999999999; // need an unlikely integer
+	$base = str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) );
+	
+	$variables = [
+		'ajaxURL' => admin_url('admin-ajax.php'),
+		'urlBase' => $base
+	];
+	wp_localize_script('main', 'esgi', $variables);
 }
 
 
@@ -45,6 +59,125 @@ function getIcon($icon){
 	return $$icon;
 }
 
+
+// Customizer de theme
+
+add_action('customize_register','esgi_customize_register');
+function esgi_customize_register( $wp_customize ) {
+
+	// Créer une section ESGI
+	$wp_customize->add_section( 'esgi', array(
+	  'title' => __( 'Paramètres ESGI' ),
+	  'description' => __( 'Faites vous plaiisir !' ),
+	  'priority' => 0
+	) );
+
+	// Créer les settings (is_dark, main_color, has_sidebar)
+	$wp_customize->add_setting( 'is_dark', array(
+	  'default' => false,
+	  'type' => 'theme_mod', // or 'option'
+	  'capability' => 'edit_theme_options',
+	  'transport' => 'refresh', // or postMessage
+	  'sanitize_callback' => 'sanitizeBool',
+	) );
+
+	$wp_customize->add_setting( 'has_sidebar', array(
+	  'default' => false,
+	  'type' => 'theme_mod', // or 'option'
+	  'capability' => 'edit_theme_options',
+	  'transport' => 'refresh', // or postMessage
+	  'sanitize_callback' => 'sanitizeBool',
+	) );
+
+	$wp_customize->add_setting( 'main_color', array(
+	  'default' => '#3F51B5',
+	  'type' => 'theme_mod', // or 'option'
+	  'capability' => 'edit_theme_options',
+	  'transport' => 'refresh', // or postMessage
+	  'sanitize_callback' => 'sanitize_hex_color',
+	) );
+
+
+	// Créer les controls correspondants
+	$wp_customize->add_control( 'is_dark', array(
+	  'type' => 'checkbox',
+	  'priority' => 1, // Within the section.
+	  'section' => 'esgi', // Required, core or custom.
+	  'label' => __( 'Thème sombre' ),
+	  'description' => __( 'Black is beautiful.' ),
+	) );
+
+	$wp_customize->add_control( 'has_sidebar', array(
+	  'type' => 'checkbox',
+	  'priority' => 2, // Within the section.
+	  'section' => 'esgi', // Required, core or custom.
+	  'label' => __( 'Barre latérale' ),
+	  'description' => __( 'Afficher une barre latérale sur les pages d\'article.' ),
+	) );
+
+	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'main_color', array(
+  'label' => __( 'Couleur principale du thème'),
+  'section' => 'esgi',
+) ) );
+
+
+}
+
+
+function sanitizeBool($value){
+	if(is_bool($value)){
+		return $value;
+	}
+	return false;
+}
+
+// Prise en compte des parametres utilisateur
+
+add_filter( 'body_class', 'esgi_custom_class' );
+function esgi_custom_class( $classes ) {
+	if ( get_theme_mod('is_dark', false) ) {
+        $classes[] = 'dark';
+    }
+	return $classes;
+}
+
+add_action('wp_head', 'esgi_custom_css');
+function esgi_custom_css(){
+	$color = get_theme_mod('main_color', '#3F51B5');
+	echo '<style>
+			:root{
+				--main-color: ' . $color . ';
+			}
+		</style>';
+}
+
+add_action('widgets_init', 'esgi_set_sidebar');
+function esgi_set_sidebar(){
+	register_sidebar( array(
+		'name'          => __( 'Barre latérale'),
+		'id'            => 'sidebar-1',
+		'description'   => __( 'Zone de widgets afficés dans la barre latérale' ),
+	) );
+}
+
+
+// Déclaration des routes ajax
+add_action( 'wp_ajax_load_posts', 'ajax_load_posts' );
+add_action( 'wp_ajax_nopriv_load_posts', 'ajax_load_posts' );
+
+
+// Function callback du call ajax
+function ajax_load_posts(){
+	// parametre paged
+	$paged = $_POST['page'];
+	$base = $_POST['base'];
+	// ouverture du cache php
+	ob_start();
+	// include le composant posts-list
+	include('template-parts/posts-list.php');
+	echo ob_get_clean();
+	die();
+}
 
 
 

@@ -11,9 +11,14 @@
 				<?= get_the_post_thumbnail() ?>
 				<?php the_content(); ?>
 			</div>
+
+			<?php if(get_theme_mod('has_sidebar', false)){ ?>
+				<div class="col-md-2 offset-1">
+					<?php dynamic_sidebar( 'sidebar-1' ); ?>
+				</div>
+			<?php } ?>
 		</div>
 	</div>
-
 </main>
 
 <?php get_footer(); ?>
