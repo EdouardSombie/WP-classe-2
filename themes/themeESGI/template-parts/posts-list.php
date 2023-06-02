@@ -11,7 +11,7 @@ if(!isset($base)){
 }
 
 $args = array(
-	'posts_per_page' => 2,
+	'posts_per_page' => get_option( 'posts_per_page' ),
 	'paged' => $paged,
 	'post_status' => 'publish'
 );

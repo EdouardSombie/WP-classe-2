@@ -4590,6 +4590,14 @@ figure {
   margin: 0;
 }
 
+a {
+  color: var(--main-color);
+}
+
+p {
+  line-height: 1.6;
+}
+
 /* Styles des publications */
 .page-title, .post-title {
   text-align: center;

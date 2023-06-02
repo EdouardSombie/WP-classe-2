@@ -157,6 +157,8 @@ function esgi_set_sidebar(){
 		'name'          => __( 'Barre latérale'),
 		'id'            => 'sidebar-1',
 		'description'   => __( 'Zone de widgets afficés dans la barre latérale' ),
+		'before_widget'  => '<div>',
+		'after_widget'   => "</div>",
 	) );
 }
 

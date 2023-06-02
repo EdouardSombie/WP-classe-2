@@ -30,13 +30,13 @@ function showPage(page, nextState, nextTitle, nextURL){
 		}
 	}).done(function(reponse){
 		$('#post-list-wrapper').html(reponse);
-		ajaxizepaginationLinks()
+		ajaxizePaginationLinks()
 		window.history.replaceState(nextState, nextTitle, nextURL);
 	})
 }
 
 
-function ajaxizepaginationLinks(){
+function ajaxizePaginationLinks(){
 	var page = 1;
 	$('.page-numbers').click(function(e){
 		e.preventDefault();
